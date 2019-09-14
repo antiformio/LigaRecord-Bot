@@ -1,0 +1,6 @@
+venv
+.vscode
+credentials.json
+s3.json
+geckodriver.*
+serialize.cpython-*
