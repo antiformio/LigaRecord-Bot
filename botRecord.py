@@ -1,3 +1,4 @@
+import json
 import os
 import pickle
 import smtplib
@@ -7,7 +8,6 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-import json
 import numpy as np
 import pandas as pd
 import requests
