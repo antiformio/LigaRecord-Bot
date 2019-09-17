@@ -28,7 +28,7 @@ def getData():
         Web-Scrapping site da liga record.
     """
     options = Options()
-    options.headless = False
+    options.headless = True
 
     email, pass_word, gecko_path = readCredentials()
 
@@ -289,7 +289,7 @@ def resetTable():
         "Equipa": [
             "Alphateam",
             "FC Kombichos",
-            "Here For Beer",
+            "Here for Beer",
             "FC Chupitos",
             "ClassOnGrass",
             "Virose",
@@ -331,7 +331,7 @@ def createCalendar():
         ("FCBalasar", "FC Chupitos"),
         ("FC Kombichos", "TascoFC"),
         ("Messishow", "Fonte do Olmo FC"),
-        ("FC Poukitxo", "Here For Beer"),
+        ("FC Poukitxo", "Here for Beer"),
         ("Black Mamba FC", "Atlético Alijoense"),
         ("SL Bernardes", "Alphateam"),
         ("Virose", "ClassOnGrass"),
@@ -423,8 +423,6 @@ if __name__ == "__main__":
     )
 
     # saveUpdatedTable(tabelaUpdatedWithBiggestScorer)
-    print(tabelaUpdatedWithBiggestScorer)
-    # print(bestTeams)
 
     """
         Edita a tabela para compactar os dados e envia a nova tabela por telegram e email.
