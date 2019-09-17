@@ -5,3 +5,4 @@ s3.json
 geckodriver.*
 serialize.cpython-*
 Calendario*
+telegramCreds.json

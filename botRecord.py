@@ -22,6 +22,10 @@ def readCredentials():
         data = json.load(f)
     return data["email"], data["password"], data["gecko_path"]
 
+def readBotCredentials():
+    with open("C:\\Users\\fhm\\Desktop\\botRecordVsCode\\telegramCreds.json") as f:
+        data = json.load(f)
+    return data["bot_token"], data["bot_chatID"]
 
 def getData():
     """
@@ -117,8 +121,7 @@ def telegram_bot_sendtext(bot_message):
     """
         Recebe mensagem por parametro e envia para o bot.
     """
-    bot_token = "750941750:AAHOkacoPsz6Zknk5P2_f9_1eSReu8yy7sA"
-    bot_chatID = "792080037"
+    bot_token, bot_chatID = readBotCredentials()
     send_text = (
         "https://api.telegram.org/bot"
         + bot_token
