@@ -370,9 +370,9 @@ if __name__ == "__main__":
     """
         Vai buscar o dicionário das pontuacoes e a respectiva jornada à liga record
     """
-    dictPontuacoes, jornada = getData()
-    jornada = "Ronda " + str(int((jornada[-2:].strip())) - 1)
-    tabelaOnServer = getTable()
+    # dictPontuacoes, jornada = getData()
+    # jornada = "Ronda " + str(int((jornada[-2:].strip())) - 1)
+    # tabelaOnServer = getTable()
 
     ######################################
     # TESTING ! RETIRAR DO FLUXO DEPOIS
@@ -408,32 +408,32 @@ if __name__ == "__main__":
         Vai buscar o calendário da jornada respectiva. Calcula a string dos resultados, e a lista com os dados para actualizar a tabela.
         Envia o telegram com a string dos resultados
     """
-    calendario = getCalendar(int(jornada[-2:]))
-    resultadosString, listaResultados = buildResult(calendario, dictPontuacoes)
-    telegram_bot_sendtext(resultadosString)
+    # calendario = getCalendar(int(jornada[-2:]))
+    # resultadosString, listaResultados = buildResult(calendario, dictPontuacoes)
+    # telegram_bot_sendtext(resultadosString)
 
     """
         Actualiza a tabela com os resultados da jornada.
         Actualiza novamente com o ponto adicional da(s) melhor(es) equipa(s) da jornada.
         Salva a nova tabela na S3.
     """
-    tabelaUpdated = updateTabela(listaResultados, tabelaOnServer)
-    tabelaUpdatedWithBiggestScorer, bestTeams = biggestScorer(
-        dictPontuacoes, tabelaUpdated
-    )
+    # tabelaUpdated = updateTabela(listaResultados, tabelaOnServer)
+    # tabelaUpdatedWithBiggestScorer, bestTeams = biggestScorer(
+    #     dictPontuacoes, tabelaUpdated
+    # )
 
     # saveUpdatedTable(tabelaUpdatedWithBiggestScorer)
 
     """
         Edita a tabela para compactar os dados e envia a nova tabela por telegram e email.
     """
-    tabelaFinal = reduceTableDetails(tabelaUpdatedWithBiggestScorer)
-    telegram_bot_sendtext(tabelaFinal.to_string(header=False))
-    telegram_bot_sendtext("Equipa(s) com melhor pontuaçao: \n" + ", ".join(bestTeams))
-    tableToHtmlAndEmail(tabelaUpdatedWithBiggestScorer, bestTeams, jornada)
+    # tabelaFinal = reduceTableDetails(tabelaUpdatedWithBiggestScorer)
+    # telegram_bot_sendtext(tabelaFinal.to_string(header=False))
+    # telegram_bot_sendtext("Equipa(s) com melhor pontuaçao: \n" + ", ".join(bestTeams))
+    # tableToHtmlAndEmail(tabelaUpdatedWithBiggestScorer, bestTeams, jornada)
 
     """
         Manter sempre comentado. Serve para fazer reset à tabela, e criar os calendários (não estão completos...)
     """
     # resetTable()
-    # createCalendar()
+    createCalendar()

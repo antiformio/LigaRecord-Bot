@@ -4,3 +4,4 @@ credentials.json
 s3.json
 geckodriver.*
 serialize.cpython-*
+Calendario*
