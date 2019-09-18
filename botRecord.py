@@ -3,14 +3,11 @@ import os
 import pickle
 import smtplib
 import time
-from email.mime.application import MIMEApplication
-from email.mime.image import MIMEImage
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 import numpy as np
 import pandas as pd
 import requests
+from envelopes import Envelope, GMailSMTP
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 
@@ -22,10 +19,12 @@ def readCredentials():
         data = json.load(f)
     return data["email"], data["password"], data["gecko_path"]
 
+
 def readBotCredentials():
     with open("C:\\Users\\fhm\\Desktop\\botRecordVsCode\\telegramCreds.json") as f:
         data = json.load(f)
     return data["bot_token"], data["bot_chatID"]
+
 
 def getData():
     """
@@ -347,26 +346,17 @@ def sendEMail(texto, jornada, listaEmails):
     """
         Sends the email to the selected mailing list
     """
-    destino = listaEmails
-    mail = MIMEMultipart()
-    mail["From"] = "aws.py.servidor@gmail.com"
-    mail["To"] = ", ".join(destino)
-    mail["Cc"] = ""
-    mail["Subject"] = f"Misters do Tasco - Resultados da {jornada}"
-    text = ""
-    html = texto
-
-    part1 = MIMEText(text, "plain")
-    part2 = MIMEText(html, "html")
-    mail.attach(part1)
-    mail.attach(part2)
-
-    conn = smtplib.SMTP("smtp.gmail.com", 587)
-    conn.ehlo()
-    conn.starttls()
-    conn.login("aws.py.servidor@gmail.com", "ketooketyr")
-    conn.sendmail(mail["From"], destino, mail.as_string())
-    conn.quit()
+    envelope = Envelope(
+        from_addr=("aws.py.servidor@gmail.com", "Tasco BOT"),
+        to_addr=[
+            ("fjnmgm@gmail.com", "Filipe"),
+            ("Teixeira.capela@gmail.com", "Capela"),
+        ],
+        subject=f"Misters do Tasco - Resultados da {jornada}",
+        html_body=texto,
+    )
+    gmail = GMailSMTP("aws.py.servidor@gmail.com", "ketooketyr")
+    gmail.send(envelope)
 
 
 if __name__ == "__main__":
@@ -376,7 +366,6 @@ if __name__ == "__main__":
     # dictPontuacoes, jornada = getData()
     # jornada = "Ronda " + str(int((jornada[-2:].strip())) - 1)
     # tabelaOnServer = getTable()
-
     ######################################
     # TESTING ! RETIRAR DO FLUXO DEPOIS
     ######################################
@@ -439,4 +428,4 @@ if __name__ == "__main__":
         Manter sempre comentado. Serve para fazer reset à tabela, e criar os calendários (não estão completos...)
     """
     # resetTable()
-    createCalendar()
+    # createCalendar()
