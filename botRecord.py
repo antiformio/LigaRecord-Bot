@@ -379,7 +379,7 @@ if __name__ == "__main__":
     #     "Messishow": "23",
     #     "Fonte do Olmo FC": "78",
     #     "FC Poukitxo": "100",
-    #     "Here For Beer": "66",
+    #     "Here for Beer": "66",
     #     "Black Mamba FC": "99",
     #     "Atlético Alijoense": "1",
     #     "SL Bernardes": "55",
