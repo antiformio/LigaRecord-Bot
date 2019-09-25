@@ -329,17 +329,17 @@ def createCalendar():
     """
     readSave = serialize.serialization()
     calendario = [
-        ("Athletic Dafundo", "Chuecos FC"),
-        ("FCBalasar", "FC Chupitos"),
-        ("FC Kombichos", "TascoFC"),
-        ("Messishow", "Fonte do Olmo FC"),
-        ("FC Poukitxo", "Here for Beer"),
-        ("Black Mamba FC", "Atlético Alijoense"),
-        ("SL Bernardes", "Alphateam"),
-        ("Virose", "ClassOnGrass"),
+        ("Athletic Dafundo", "FCBalasar"),
+        ("FC Chupitos", "FC Kombichos"),
+        ("TascoFC", "Messishow"),
+        ("Fonte do Olmo FC", "FC Poukitxo"),
+        ("Here for Beer", "Black Mamba FC"),
+        ("Atlético Alijoense", "SL Bernardes"),
+        ("Alphateam", "Virose"),
+        ("Chuecos FC", "ClassOnGrass"),
     ]
-    pickle.dump(calendario, open("Calendario2", "wb"))
-    readSave.AWSupload("Calendario2", "Calendario2")
+    pickle.dump(calendario, open("Calendario3", "wb"))
+    readSave.AWSupload("Calendario3", "Calendario3")
 
 
 def sendEMail(texto, jornada, listaEmails):
@@ -428,4 +428,4 @@ if __name__ == "__main__":
         Manter sempre comentado. Serve para fazer reset à tabela, e criar os calendários (não estão completos...)
     """
     # resetTable()
-    # createCalendar()
+    createCalendar()
