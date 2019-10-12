@@ -6,3 +6,4 @@ geckodriver.*
 serialize.cpython-*
 Calendario*
 telegramCreds.json
+geckodriver
