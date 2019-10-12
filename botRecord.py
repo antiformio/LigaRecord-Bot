@@ -16,13 +16,13 @@ import serialize
 
 
 def readCredentials():
-    with open("//Users//filipemartins//Desktop//VScodeProjects//LigaRecord-Bot//credentials.json") as f:
+    with open("credentials.json") as f:
         data = json.load(f)
     return data["email"], data["password"], data["gecko_path"]
 
 
 def readBotCredentials():
-    with open("//Users//filipemartins//Desktop//VScodeProjects//LigaRecord-Bot//telegramCreds.json") as f:
+    with open("telegramCreds.json") as f:
         data = json.load(f)
     return data["bot_token"], data["bot_chatID"]
 
@@ -371,7 +371,7 @@ if __name__ == "__main__":
         Vai buscar o calendário da jornada respectiva. Calcula a string dos resultados, e a lista com os dados para actualizar a tabela.
         Envia o telegram com a string dos resultados
     """
-    calendario = getCalendar(int(ronda)) #int(ronda)
+    calendario = getCalendar(int(ronda)) 
     resultadosString, listaResultados = buildResult(calendario, dictPontuacoes)
     telegram_bot_sendtext(resultadosString)
 
