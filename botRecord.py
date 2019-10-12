@@ -3,6 +3,7 @@ import os
 import pickle
 import smtplib
 import time
+import re
 
 import numpy as np
 import pandas as pd
@@ -15,13 +16,13 @@ import serialize
 
 
 def readCredentials():
-    with open("C:\\Users\\fhm\\Desktop\\botRecordVsCode\\credentials.json") as f:
+    with open("//Users//filipemartins//Desktop//VScodeProjects//LigaRecord-Bot//credentials.json") as f:
         data = json.load(f)
     return data["email"], data["password"], data["gecko_path"]
 
 
 def readBotCredentials():
-    with open("C:\\Users\\fhm\\Desktop\\botRecordVsCode\\telegramCreds.json") as f:
+    with open("//Users//filipemartins//Desktop//VScodeProjects//LigaRecord-Bot//telegramCreds.json") as f:
         data = json.load(f)
     return data["bot_token"], data["bot_chatID"]
 
@@ -52,46 +53,16 @@ def getData():
     realpass.send_keys(pass_word)
 
     browser.find_element_by_css_selector("#loginBtn").click()
-    time.sleep(30)
+    time.sleep(10)
 
-    browser.find_element_by_xpath("/html/body/div[1]/div/div/div[2]/button[2]").click()
+    ronda = browser.find_element_by_id("id-round-main").text
 
-    browser.find_element_by_css_selector("span.i-shield-lock").click()  # Ligas Privadas
-    time.sleep(5)
-    browser.find_element_by_css_selector(".ranking").click()
-    time.sleep(5)
+    browser.get("https://liga.record.pt/common/services/teamsleague_page.ashx?guid=8116be3e-d932-4866-874f-a01212e8045c&page=1&pagesize=20&mode_ranking=round&type_ranking=")
 
-    browser.find_element_by_xpath("/html/body/footer/div[2]/i").click()
-    time.sleep(5)
+    equipas = browser.find_elements_by_class_name("nome")
+    pontos = browser.find_elements_by_class_name("pontos_equipa")
 
-    dropdown = browser.find_element_by_xpath(
-        "/html/body/form/section[2]/div[2]/div[2]/div[2]/div/div[2]/div[1]/div/button"
-    )
-    dropdown.click()
-    time.sleep(5)
-
-    browser.find_element_by_xpath(
-        "/html/body/form/section[2]/div[2]/div[2]/div[2]/div/div[2]/div[1]/div/ul/li[2]/a"
-    ).click()
-    time.sleep(3)
-
-    equipas = browser.find_element_by_xpath(
-        '//*[@id="main_main_main_ctl00_ltTeamsRound"]'
-    )
-    todas = equipas.find_elements_by_tag_name("h5")
-
-    rondaObject = browser.find_element_by_xpath('//*[@id="topContainer_ctl00_round"]')
-    numeroRondaObject = rondaObject.find_elements_by_tag_name("h2")
-    jornada = numeroRondaObject[0].text
-
-    list = []
-    for equipaNome in todas:
-        list.append(equipaNome.text)
-    browser.quit()
-
-    resultadosDict = {list[i]: list[i + 1] for i in range(0, len(list), 2)}
-
-    return resultadosDict, jornada
+    return {equipas[i].text: re.findall(r'\d+', pontos[i].text)[0] for i in range(0, 16)}, ronda
 
 
 def getTable():
@@ -363,9 +334,9 @@ if __name__ == "__main__":
     """
         Vai buscar o dicionário das pontuacoes e a respectiva jornada à liga record
     """
-    # dictPontuacoes, jornada = getData()
-    # jornada = "Ronda " + str(int((jornada[-2:].strip())) - 1)
-    # tabelaOnServer = getTable()
+    dictPontuacoes, ronda = getData()
+    jornada = "Ronda " + str(int((ronda[-2:].strip())) - 1)
+    tabelaOnServer = getTable()
     ######################################
     # TESTING ! RETIRAR DO FLUXO DEPOIS
     ######################################
@@ -400,7 +371,7 @@ if __name__ == "__main__":
         Vai buscar o calendário da jornada respectiva. Calcula a string dos resultados, e a lista com os dados para actualizar a tabela.
         Envia o telegram com a string dos resultados
     """
-    # calendario = getCalendar(int(jornada[-2:]))
+    # calendario = getCalendar(int(ronda))
     # resultadosString, listaResultados = buildResult(calendario, dictPontuacoes)
     # telegram_bot_sendtext(resultadosString)
 

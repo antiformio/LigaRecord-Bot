@@ -13,7 +13,7 @@ class serialization:
     """
 
     def readCredentials(self):
-        with open("C:\\Users\\fhm\\source\\repos\\botRecord\\botRecord\\s3.json") as f:
+        with open("//Users//filipemartins//Desktop//VScodeProjects//LigaRecord-Bot//s3.json") as f:
             data = json.load(f)
         aws_access_key_id = data["ACCESS_KEY"]
         aws_secret_access_key = data["SECRET_KEY"]
