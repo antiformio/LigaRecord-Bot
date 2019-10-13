@@ -7,3 +7,5 @@ serialize.cpython-*
 Calendario*
 telegramCreds.json
 geckodriver
+botRecordVenv/*
+botRecordVenv/lib64

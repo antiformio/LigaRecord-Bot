@@ -1,9 +1,9 @@
 import json
 import os
 import pickle
+import re
 import smtplib
 import time
-import re
 
 import numpy as np
 import pandas as pd
@@ -32,7 +32,7 @@ def getData():
         Web-Scrapping site da liga record.
     """
     options = Options()
-    options.headless = True
+    options.headless = False
 
     email, pass_word, gecko_path = readCredentials()
 
@@ -57,12 +57,17 @@ def getData():
 
     ronda = browser.find_element_by_id("id-round-main").text
 
-    browser.get("https://liga.record.pt/common/services/teamsleague_page.ashx?guid=8116be3e-d932-4866-874f-a01212e8045c&page=1&pagesize=20&mode_ranking=round&type_ranking=")
+    browser.get(
+        "https://liga.record.pt/common/services/teamsleague_page.ashx?guid=8116be3e-d932-4866-874f-a01212e8045c&page=1&pagesize=20&mode_ranking=round&type_ranking="
+    )
 
     equipas = browser.find_elements_by_class_name("nome")
     pontos = browser.find_elements_by_class_name("pontos_equipa")
 
-    return {equipas[i].text: re.findall(r'\d+', pontos[i].text)[0] for i in range(0, 16)}, ronda
+    return (
+        {equipas[i].text: re.findall(r"\d+", pontos[i].text)[0] for i in range(0, 16)},
+        ronda,
+    )
 
 
 def getTable():
@@ -321,7 +326,7 @@ def sendEMail(texto, jornada, listaEmails):
         from_addr=("aws.py.servidor@gmail.com", "Tasco BOT"),
         to_addr=[
             ("fjnmgm@gmail.com", "Filipe"),
-            #("Teixeira.capela@gmail.com", "Capela"),
+            # ("Teixeira.capela@gmail.com", "Capela"),
         ],
         subject=f"Misters do Tasco - Resultados da {jornada}",
         html_body=texto,
@@ -371,7 +376,7 @@ if __name__ == "__main__":
         Vai buscar o calendário da jornada respectiva. Calcula a string dos resultados, e a lista com os dados para actualizar a tabela.
         Envia o telegram com a string dos resultados
     """
-    calendario = getCalendar(int(ronda)) 
+    calendario = getCalendar(int(ronda))
     resultadosString, listaResultados = buildResult(calendario, dictPontuacoes)
     telegram_bot_sendtext(resultadosString)
 
@@ -382,8 +387,8 @@ if __name__ == "__main__":
     """
     tabelaUpdated = updateTabela(listaResultados, tabelaOnServer)
     tabelaUpdatedWithBiggestScorer, bestTeams = biggestScorer(
-         dictPontuacoes, tabelaUpdated
-     )
+        dictPontuacoes, tabelaUpdated
+    )
 
     # saveUpdatedTable(tabelaUpdatedWithBiggestScorer)
 
