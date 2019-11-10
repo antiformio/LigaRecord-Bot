@@ -55,6 +55,10 @@ def getData():
     browser.find_element_by_css_selector("#loginBtn").click()
     time.sleep(10)
 
+    spam_button = browser.find_element_by_xpath("/html/body/div[1]/div/div/div[2]/button[2]")
+    spam_button.click()
+    time.sleep(3)
+
     ronda = browser.find_element_by_id("id-round-main").text
 
     browser.get(
