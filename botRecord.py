@@ -55,10 +55,6 @@ def getData():
     browser.find_element_by_css_selector("#loginBtn").click()
     time.sleep(10)
 
-    spam_button = browser.find_element_by_xpath("/html/body/div[1]/div/div/div[2]/button[2]")
-    spam_button.click()
-    time.sleep(3)
-
     ronda = browser.find_element_by_id("id-round-main").text
 
     browser.get(
@@ -286,14 +282,14 @@ def resetTable():
             "Fonte do Olmo FC",
             "Messishow",
         ],
-        "Pontos": [0, 3, 0, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 1, 0],
-        "Jogos": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        "V": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        "E": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        "D": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        "GM": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        "GS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        "GA": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "Pontos": [11, 15, 7, 2, 5, 14, 9, 14, 14, 15, 8, 7, 3, 9, 11, 10],
+        "Jogos": [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+        "V": [3, 4, 2, 0, 1, 4, 2, 4, 4, 5, 2, 2, 1, 3, 3, 3],
+        "E": [1, 0, 0, 2, 2, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0],
+        "D": [2, 2, 4, 4, 3, 1, 3, 1, 2, 1, 4, 3, 5, 3, 2, 3],
+        "GM": [293,292,231,259,231,280,258,293,272,280,271,259,212,234,255,255],
+        "GS": [279,279,265,292,246,254,271,247,246,235,289,265,255,240,243,269],
+        "GA": [14,13,-34,-33,-15,26,-13,46,26,45,-18,-6,-43,-6,12,-14],
     }
     tabela = pd.DataFrame(
         dataForFrame,
@@ -309,17 +305,17 @@ def createCalendar():
     """
     readSave = serialize.serialization()
     calendario = [
-        ("Athletic Dafundo", "FCBalasar"),
-        ("FC Chupitos", "FC Kombichos"),
-        ("TascoFC", "Messishow"),
-        ("Fonte do Olmo FC", "FC Poukitxo"),
-        ("Here for Beer", "Black Mamba FC"),
-        ("Atlético Alijoense", "SL Bernardes"),
-        ("Alphateam", "Virose"),
-        ("Chuecos FC", "ClassOnGrass"),
+        ("FC Kombichos", "Messishow"),
+        ("FCBalasar", "FC Poukitxo"),
+        ("Athletic Dafundo", "Black Mamba FC"),
+        ("FC Chupitos", "SL Bernardes"),
+        ("TascoFC", "Virose"),
+        ("Fonte do Olmo FC", "ClassOnGrass"),
+        ("Here for Beer", "Alphateam"),
+        ("Chuecos FC", "Atlético Alijoense"),
     ]
-    pickle.dump(calendario, open("Calendario3", "wb"))
-    readSave.AWSupload("Calendario3", "Calendario3")
+    pickle.dump(calendario, open("Calendario7", "wb"))
+    readSave.AWSupload("Calendario7", "Calendario7")
 
 
 def sendEMail(texto, jornada, listaEmails):
@@ -394,7 +390,7 @@ if __name__ == "__main__":
         dictPontuacoes, tabelaUpdated
     )
 
-    # saveUpdatedTable(tabelaUpdatedWithBiggestScorer)
+    saveUpdatedTable(tabelaUpdatedWithBiggestScorer)
 
     """
         Edita a tabela para compactar os dados e envia a nova tabela por telegram e email.
