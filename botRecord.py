@@ -36,7 +36,6 @@ def getData():
 
     try:
         email, pass_word, gecko_path = readCredentials()
-        print("encontrou as chaves")
     except Exception as e:
         telegram_bot_sendtext("Ocorreu um erro ao ler as credenciais - metodo readCredentials")
         telegram_bot_sendtext(str(e))
@@ -44,11 +43,9 @@ def getData():
     
     try:
         browser = webdriver.Firefox(options=options, executable_path=gecko_path)
-        print("temos o broiwser")
         browser.get(
             "https://aminhaconta.xl.pt/LoginNonio?returnUrl=https%3a%2f%2fliga.record.pt%2fdefault.aspx"
         )
-        print("temos a pagina...")
     except Exception as e:
         telegram_bot_sendtext("Ocorreu um erro ao carregar o webDriver")
         telegram_bot_sendtext(str(e))
