@@ -36,15 +36,19 @@ def getData():
 
     try:
         email, pass_word, gecko_path = readCredentials()
+        print("encontrou as chaves")
     except Exception as e:
         telegram_bot_sendtext("Ocorreu um erro ao ler as credenciais - metodo readCredentials")
         telegram_bot_sendtext(str(e))
         return
+    
     try:
         browser = webdriver.Firefox(options=options, executable_path=gecko_path)
+        print("temos o broiwser")
         browser.get(
             "https://aminhaconta.xl.pt/LoginNonio?returnUrl=https%3a%2f%2fliga.record.pt%2fdefault.aspx"
         )
+        print("temos a pagina...")
     except Exception as e:
         telegram_bot_sendtext("Ocorreu um erro ao carregar o webDriver")
         telegram_bot_sendtext(str(e))
@@ -64,8 +68,9 @@ def getData():
         realpass.send_keys(pass_word)
 
         browser.find_element_by_css_selector("#loginBtn").click()
-        time.sleep(10)
+        time.sleep(20)
 
+        print("a procurar a ronda...")
         ronda = browser.find_element_by_id("id-round-main").text
 
         browser.get(
@@ -79,12 +84,10 @@ def getData():
 
     equipas = browser.find_elements_by_class_name("nome")
     pontos = browser.find_elements_by_class_name("pontos_equipa")
-
-    return (
-        {equipas[i].text: re.findall(r"\d+", pontos[i].text)[0] for i in range(0, 16)},
-        ronda,
-    )
-
+    results = {equipas[i].text: re.findall(r"\d+", pontos[i].text)[0] for i in range(0, 16)}
+    
+    browser.quit()
+    return results, ronda
 
 def getTable():
     """
