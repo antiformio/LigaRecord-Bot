@@ -36,7 +36,7 @@ def getData():
 
     try:
         email, pass_word, gecko_path = readCredentials()
-    except Exception e:
+    except Exception as e:
         telegram_bot_sendtext("Ocorreu um erro ao ler as credenciais - metodo readCredentials")
         telegram_bot_sendtext(e)
         return
@@ -45,7 +45,7 @@ def getData():
         browser.get(
             "https://aminhaconta.xl.pt/LoginNonio?returnUrl=https%3a%2f%2fliga.record.pt%2fdefault.aspx"
         )
-    except Exception e:
+    except Exception as e:
         telegram_bot_sendtext("Ocorreu um erro ao carregar o webDriver")
         telegram_bot_sendtext(e)
         return
@@ -70,7 +70,7 @@ def getData():
         browser.get(
             "https://liga.record.pt/common/services/teamsleague_page.ashx?guid=8116be3e-d932-4866-874f-a01212e8045c&page=1&pagesize=20&mode_ranking=round&type_ranking="
         )
-    except Exception e:
+    except Exception as e:
         telegram_bot_sendtext("Erro ao ler a pagina:")
         telegram_bot_sendtext(e)
         return
