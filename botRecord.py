@@ -32,7 +32,7 @@ def getData():
         Web-Scrapping site da liga record.
     """
     options = Options()
-    options.headless = False
+    options.headless = True
 
     try:
         email, pass_word, gecko_path = readCredentials()
@@ -48,6 +48,7 @@ def getData():
     except Exception as e:
         telegram_bot_sendtext("Ocorreu um erro ao carregar o webDriver")
         telegram_bot_sendtext(str(e))
+        browser.quit()
         return
 
     try:
@@ -73,6 +74,7 @@ def getData():
     except Exception as e:
         telegram_bot_sendtext("Erro ao ler a pagina:")
         telegram_bot_sendtext(str(e))
+        browser.quit()
         return
 
     equipas = browser.find_elements_by_class_name("nome")
