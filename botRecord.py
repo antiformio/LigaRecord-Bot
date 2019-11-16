@@ -34,32 +34,46 @@ def getData():
     options = Options()
     options.headless = False
 
-    email, pass_word, gecko_path = readCredentials()
+    try:
+        email, pass_word, gecko_path = readCredentials()
+    except Exception e:
+        telegram_bot_sendtext("Ocorreu um erro ao ler as credenciais - metodo readCredentials")
+        telegram_bot_sendtext(e)
+        return
+    try:
+        browser = webdriver.Firefox(options=options, executable_path=gecko_path)
+        browser.get(
+            "https://aminhaconta.xl.pt/LoginNonio?returnUrl=https%3a%2f%2fliga.record.pt%2fdefault.aspx"
+        )
+    except Exception e:
+        telegram_bot_sendtext("Ocorreu um erro ao carregar o webDriver")
+        telegram_bot_sendtext(e)
+        return
 
-    browser = webdriver.Firefox(options=options, executable_path=gecko_path)
-    browser.get(
-        "https://aminhaconta.xl.pt/LoginNonio?returnUrl=https%3a%2f%2fliga.record.pt%2fdefault.aspx"
-    )
+    try:
+        user = browser.find_element_by_css_selector("#email")
+        user.send_keys(email)
+        time.sleep(5)
 
-    user = browser.find_element_by_css_selector("#email")
-    user.send_keys(email)
-    time.sleep(5)
+        password = browser.find_element_by_xpath(
+            "/html/body/section/div/div/div/div[2]/form/div[2]"
+        )
+        password.click()
+        realpass = browser.find_element_by_css_selector("#password")
+        realpass.send_keys(pass_word)
 
-    password = browser.find_element_by_xpath(
-        "/html/body/section/div/div/div/div[2]/form/div[2]"
-    )
-    password.click()
-    realpass = browser.find_element_by_css_selector("#password")
-    realpass.send_keys(pass_word)
+        browser.find_element_by_css_selector("#loginBtn").click()
+        time.sleep(10)
 
-    browser.find_element_by_css_selector("#loginBtn").click()
-    time.sleep(10)
+        ronda = browser.find_element_by_id("id-round-main").text
 
-    ronda = browser.find_element_by_id("id-round-main").text
-
-    browser.get(
-        "https://liga.record.pt/common/services/teamsleague_page.ashx?guid=8116be3e-d932-4866-874f-a01212e8045c&page=1&pagesize=20&mode_ranking=round&type_ranking="
-    )
+        browser.get(
+            "https://liga.record.pt/common/services/teamsleague_page.ashx?guid=8116be3e-d932-4866-874f-a01212e8045c&page=1&pagesize=20&mode_ranking=round&type_ranking="
+        )
+    except Exception e:
+        telegram_bot_sendtext("Erro ao ler a pagina:")
+        telegram_bot_sendtext(e)
+        return
 
     equipas = browser.find_elements_by_class_name("nome")
     pontos = browser.find_elements_by_class_name("pontos_equipa")
