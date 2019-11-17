@@ -253,7 +253,6 @@ def tableToHtmlAndEmail(table, bestTeams, jornada):
         Ordena a tabela por Pontos descendente. Cria novo index.
         Converte a tabela para HTML, e envia email.
     """
-    listaEmails = ["fjnmgm@gmail.com"]  # ,'Teixeira.capela@gmail.com'
     tableHtml = table.sort_values(["Pontos"], ascending=False).reset_index(drop=True)
     tableHtml.index = np.arange(1, len(tableHtml) + 1)
     htmlTable = tableHtml.to_html()
@@ -265,10 +264,10 @@ def tableToHtmlAndEmail(table, bestTeams, jornada):
         + "<br><br><b>Tabela classificativa: </b>"
         + htmlTable
     )
-    sendEMail(textoEmail, jornada, listaEmails)
+    sendEMail(textoEmail, jornada)
 
 
-def sendEMail(texto, jornada, listaEmails):
+def sendEMail(texto, jornada):
     """
         Sends the email to the selected mailing list
     """
