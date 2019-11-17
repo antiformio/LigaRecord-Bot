@@ -82,3 +82,26 @@ class ReadFromDB:
         data = self.select_database("*", table_name, column_to_search, str(jornada))
         return data
 
+
+"""
+    @staticmethod
+        nao depende do objecto. é uma utilidade para a classe.
+        ReadFromDB.is_valid(22)
+    
+    @classmethod
+        nao depende do objecto, depende da classe. tem acesso aos atributos da classe 
+            e pode altera-los, sendo que os novos objectos gerados obedecem a essa alteracao
+    
+
+        class Person: 
+            @classmethod
+            def fromBirthYear(cls, name, year): 
+                return cls(name, date.today().year - year) 
+            
+            @staticmethod
+                def isAdult(age): 
+                return age > 18
+            
+            person2 = Person.fromBirthYear('mayank', 1996) 
+            print(Person.isAdult(22))
+"""
