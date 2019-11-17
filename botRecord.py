@@ -4,6 +4,7 @@ import pickle
 import re
 import smtplib
 import time
+import ligaUtils, dbcon
 
 import numpy as np
 import pandas as pd
@@ -37,10 +38,12 @@ def getData():
     try:
         email, pass_word, gecko_path = readCredentials()
     except Exception as e:
-        telegram_bot_sendtext("Ocorreu um erro ao ler as credenciais - metodo readCredentials")
+        telegram_bot_sendtext(
+            "Ocorreu um erro ao ler as credenciais - metodo readCredentials"
+        )
         telegram_bot_sendtext(str(e))
         return
-    
+
     try:
         browser = webdriver.Firefox(options=options, executable_path=gecko_path)
         browser.get(
@@ -67,7 +70,6 @@ def getData():
         browser.find_element_by_css_selector("#loginBtn").click()
         time.sleep(20)
 
-        print("a procurar a ronda...")
         ronda = browser.find_element_by_id("id-round-main").text
 
         browser.get(
@@ -81,10 +83,13 @@ def getData():
 
     equipas = browser.find_elements_by_class_name("nome")
     pontos = browser.find_elements_by_class_name("pontos_equipa")
-    results = {equipas[i].text: re.findall(r"\d+", pontos[i].text)[0] for i in range(0, 16)}
-    
+    results = {
+        equipas[i].text: re.findall(r"\d+", pontos[i].text)[0] for i in range(0, 16)
+    }
+
     browser.quit()
     return results, ronda
+
 
 def getTable():
     """
@@ -95,17 +100,6 @@ def getTable():
     tabelaDownloaded = pickle.load(open("TableDownloaded", "rb"))
     os.remove("TableDownloaded")
     return tabelaDownloaded
-
-
-def getCalendar(jornada):
-    """
-        Download do ficheiro do calendário, de uma determinada jornada
-    """
-    readSave = serialize.serialization()
-    readSave.AWSdownload(f"Calendario{jornada}", f"Calendario{jornada}")
-    calendario = pickle.load(open(f"Calendario{jornada}", "rb"))
-    os.remove(f"Calendario{jornada}")
-    return calendario
 
 
 def telegram_bot_sendtext(bot_message):
@@ -151,11 +145,11 @@ def buildResult(tuplos, dictPontuacoes):
     resultadoString = ""
     listaResultados = []
     for jogo in tuplos:
-        casa, fora = jogo[0], jogo[1]
+        casa, fora = jogo[2], jogo[3]
         resultadoString += __getResultByJogo(casa, fora, dictPontuacoes)
         newDic = {
-            jogo[0]: int(dictPontuacoes[jogo[0]]),
-            jogo[1]: int(dictPontuacoes[jogo[1]]),
+            jogo[2]: int(dictPontuacoes[jogo[2]]),
+            jogo[3]: int(dictPontuacoes[jogo[3]]),
         }
         listaResultados.append(newDic)
     return resultadoString, listaResultados
@@ -274,66 +268,6 @@ def tableToHtmlAndEmail(table, bestTeams, jornada):
     sendEMail(textoEmail, jornada, listaEmails)
 
 
-def resetTable():
-    """
-        Function to reset the table to default values. Use carefully because it deletes the previous table.
-    """
-    readSave = serialize.serialization()
-    dataForFrame = {
-        "Equipa": [
-            "Alphateam",
-            "FC Kombichos",
-            "Here for Beer",
-            "FC Chupitos",
-            "ClassOnGrass",
-            "Virose",
-            "FCBalasar",
-            "SL Bernardes",
-            "TascoFC",
-            "Athletic Dafundo",
-            "Chuecos FC",
-            "FC Poukitxo",
-            "Atlético Alijoense",
-            "Black Mamba FC",
-            "Fonte do Olmo FC",
-            "Messishow",
-        ],
-        "Pontos": [11, 15, 7, 2, 5, 14, 9, 14, 14, 15, 8, 7, 3, 9, 11, 10],
-        "Jogos": [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
-        "V": [3, 4, 2, 0, 1, 4, 2, 4, 4, 5, 2, 2, 1, 3, 3, 3],
-        "E": [1, 0, 0, 2, 2, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0],
-        "D": [2, 2, 4, 4, 3, 1, 3, 1, 2, 1, 4, 3, 5, 3, 2, 3],
-        "GM": [293,292,231,259,231,280,258,293,272,280,271,259,212,234,255,255],
-        "GS": [279,279,265,292,246,254,271,247,246,235,289,265,255,240,243,269],
-        "GA": [14,13,-34,-33,-15,26,-13,46,26,45,-18,-6,-43,-6,12,-14],
-    }
-    tabela = pd.DataFrame(
-        dataForFrame,
-        columns=["Equipa", "Pontos", "Jogos", "V", "E", "D", "GM", "GS", "GA"],
-    )
-    pickle.dump(tabela, open("Tabela", "wb"))
-    readSave.AWSupload("Tabela", "Tabela")
-
-
-def createCalendar():
-    """
-        Function to create calendar. Eatch file (jornada) consists on a list of tuples. filenames is as following: CalendarioX (X being Ronda)
-    """
-    readSave = serialize.serialization()
-    calendario = [
-        ("FC Kombichos", "Messishow"),
-        ("FCBalasar", "FC Poukitxo"),
-        ("Athletic Dafundo", "Black Mamba FC"),
-        ("FC Chupitos", "SL Bernardes"),
-        ("TascoFC", "Virose"),
-        ("Fonte do Olmo FC", "ClassOnGrass"),
-        ("Here for Beer", "Alphateam"),
-        ("Chuecos FC", "Atlético Alijoense"),
-    ]
-    pickle.dump(calendario, open("Calendario7", "wb"))
-    readSave.AWSupload("Calendario7", "Calendario7")
-
-
 def sendEMail(texto, jornada, listaEmails):
     """
         Sends the email to the selected mailing list
@@ -358,41 +292,18 @@ if __name__ == "__main__":
     dictPontuacoes, ronda = getData()
     jornada = "Ronda " + str(int((ronda[-2:].strip())) - 1)
     tabelaOnServer = getTable()
-    ######################################
-    # TESTING ! RETIRAR DO FLUXO DEPOIS
-    ######################################
-    # dictPontuacoes = {
-    #     "Athletic Dafundo": "34",
-    #     "Chuecos FC": "21",
-    #     "FCBalasar": "23",
-    #     "FC Chupitos": "54",
-    #     "FC Kombichos": "87",
-    #     "TascoFC": "23",
-    #     "Messishow": "23",
-    #     "Fonte do Olmo FC": "78",
-    #     "FC Poukitxo": "100",
-    #     "Here for Beer": "66",
-    #     "Black Mamba FC": "99",
-    #     "Atlético Alijoense": "1",
-    #     "SL Bernardes": "55",
-    #     "Alphateam": "33",
-    #     "Virose": "100",
-    #     "ClassOnGrass": "12",
-    # }
-    # jornada = "RONDA 1"
-    ######################################
-    ######################################
 
     """
         Salvar o dicionário dos resultados na S3 (formato RONDA X)
     """
-    # saveResultsDict(dictPontuacoes, jornada)
+    saveResultsDict(dictPontuacoes, jornada)
 
     """
         Vai buscar o calendário da jornada respectiva. Calcula a string dos resultados, e a lista com os dados para actualizar a tabela.
         Envia o telegram com a string dos resultados
     """
-    calendario = getCalendar(int(ronda))
+    db_reader = dbcon.ReadFromDB()
+    calendario = db_reader.get_calendario(int(ronda))
     resultadosString, listaResultados = buildResult(calendario, dictPontuacoes)
     telegram_bot_sendtext(resultadosString)
 
@@ -406,7 +317,7 @@ if __name__ == "__main__":
         dictPontuacoes, tabelaUpdated
     )
 
-    saveUpdatedTable(tabelaUpdatedWithBiggestScorer)
+    # saveUpdatedTable(tabelaUpdatedWithBiggestScorer)
 
     """
         Edita a tabela para compactar os dados e envia a nova tabela por telegram e email.
@@ -419,5 +330,10 @@ if __name__ == "__main__":
     """
         Manter sempre comentado. Serve para fazer reset à tabela, e criar os calendários (não estão completos...)
     """
-    # resetTable()
-    # createCalendar()
+    #
+    # write_to_db = dbcon.WriteToDb()
+    # write_to_db.txt_to_db()
+
+    # ligaUtils.resetTable()
+    # ligaUtils.createCalendar()
+
