@@ -301,8 +301,8 @@ if __name__ == "__main__":
         Vai buscar o calendário da jornada respectiva. Calcula a string dos resultados, e a lista com os dados para actualizar a tabela.
         Envia o telegram com a string dos resultados
     """
-    db_reader = dbcon.ReadFromDB()
-    calendario = db_reader.get_calendario(int(ronda))
+    reader = dbcon.ReadFromDB()
+    calendario = reader.get_calendario(int(ronda))
     resultadosString, listaResultados = buildResult(calendario, dictPontuacoes)
     telegram_bot_sendtext(resultadosString)
 

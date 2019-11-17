@@ -70,12 +70,15 @@ class ReadFromDB:
         self.conn = sqlite3.connect(self.db_file)
         self.c = self.conn.cursor()
 
-    def get_calendario(self, jornada):
-        table_name = "JOGO"
-        column_to_search = "id_jornada"
-        self.c.execute(
-            f'SELECT * FROM {table_name} WHERE {column_to_search}="{jornada}"'
-        )
+    def select_database(self, fields, table, column, value):
+        self.c.execute(f'SELECT {fields} FROM {table} WHERE {column}="{value}"')
         data = self.c.fetchall()
         self.conn.close()
         return data
+
+    def get_calendario(self, jornada):
+        table_name = "JOGO"
+        column_to_search = "id_jornada"
+        data = self.select_database("*", table_name, column_to_search, str(jornada))
+        return data
+
