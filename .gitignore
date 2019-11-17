@@ -10,3 +10,4 @@ geckodriver
 botRecordVenv/*
 botRecordVenv/lib64
 Tabela
+*.pyc
