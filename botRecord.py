@@ -302,7 +302,7 @@ if __name__ == "__main__":
         Envia o telegram com a string dos resultados
     """
     reader = dbcon.ReadFromDB()
-    calendario = reader.get_calendario(int(ronda))
+    calendario = reader.get_calendario(int(ronda)-1)
     resultadosString, listaResultados = buildResult(calendario, dictPontuacoes)
     telegram_bot_sendtext(resultadosString)
 
